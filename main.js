@@ -1,30 +1,29 @@
-import Dado from './Dado.js';
-import Ciclo from './Ciclo.js';
-
+import SimulacionCiclos from './SimulacionCiclos.js';
+import Ciclos from './Ciclos.js';
 class Main{
     constructor(){
         this._Actual = null;
-        document.querySelector('#btnColas').addEventListener('click', () => {
-            let dado = new Dado();
+        document.querySelector('#btnCalcular').addEventListener('click', () => {
+            let simulacionCiclos = new SimulacionCiclos();
             let contador = 0;
-            let conFinal = 0;
-            let numDeProceso = 1;
-            let numProcesosInc = 0;
-            let ciclosFaltantes = 0;
+            let contadorFinal = 0;
+            let numeroDeProcesos = 1;
+            let numeroDeProcesos2 = 0;
+            let ciclosRestantes = 0;
 
             for(let i=0;i<300;i++){
-                if(dado.Lanzar()<=39){
-                    this.nuevoProceso(new Ciclo('proceso '+numDeProceso, Math.trunc(Math.random()*11)+4));
-                    console.log('se ha agregado un nuevo proceso');
-                    numDeProceso++;
+                if(simulacionCiclos.Lanzar()<=39){
+                    this.nuevoProceso(new Ciclos('el proceso ' + numeroDeProcesos, Math.trunc(Math.random()*11)+4));
+                    console.log('Se ha agregado un proceso');
+                    numeroDeProcesos++;
                 }
 
                 if(this._Actual!==null){
-                    this._Actual.numCiclos -=1;
+                    this._Actual.numeroCiclos -=1;
                     
-                    if(this._Actual.numCiclos === 0){
-                        conFinal++;
-                        console.log('Proceso completado '+ this._Actual.nombre);
+                    if(this._Actual.numeroCiclos === 0){
+                        contadorFinal++;
+                        console.log('Se completo ' + this._Actual.nombre);
                         this._Actual = this._Actual.siguiente;
                     }
                 }else{
@@ -32,18 +31,18 @@ class Main{
                 }
             }
 
-            let incompletos = this._Actual;
-            while(incompletos!==null){
-                numProcesosInc++;
-                ciclosFaltantes+=this._Actual.numCiclos;
-                incompletos = incompletos.siguiente;
+            let faltantes = this._Actual;
+            while(faltantes!==null){
+                numeroDeProcesos2++;
+                ciclosRestantes+= this._Actual.numeroCiclos;
+                faltantes = faltantes.siguiente;
             }
-            console.log('Cola vacía durante ' + contador + ' ciclos');
-            console.log('Número de procesos completados: '+ conFinal);
-            console.log('Procesos que no terminaron: '+ numProcesosInc);
-            console.log('Suma de los ciclos pendientes: ' + ciclosFaltantes);          
+
+            console.log('El total de procesos son: ' + contadorFinal);
+            console.log('La Cola estuvo vacía en el ciclo: ' + contador);
+            console.log('Total de ciclos faltantes: ' + ciclosRestantes);  
+            console.log('Procesos que no fueron finalizados: ' + numeroDeProcesos2);        
         })
-        
     } 
 
     nuevoProceso(proceso){
